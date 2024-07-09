@@ -17,6 +17,7 @@ class simulator():
     show_detail = True
     time_show_limit = 7
     array = []
+    results = []
     
     def set(self, sortType : Sort_type, array_size : int, shuffle : list, show_detail : bool):
         self.sortType = sortType
@@ -27,6 +28,8 @@ class simulator():
     
     # 시뮬레이션 실행
     def simualate_all(self):
+        self.results = []
+        
         print("="*50)
         print("시뮬레이션이 시작되었습니다")
         
@@ -36,6 +39,22 @@ class simulator():
             self.make_array(repeat)
             self.start_sort()
             print("-"*50 + "\n")
+        
+        print("="*50)
+        print("시뮬레이션이 완료되었습니다")
+        time_sum = 0
+        for result in self.results:
+            time_sum += result[0]
+        print("평균 소요 시간 : %s초" % str(time_sum/len(self.shuffle))[:self.time_show_limit])
+        if self.show_detail:
+            if self.sortType == Sort_type.BUBBLE or self.sortType == Sort_type.SELECTION:
+                comp_sum = 0
+                swap_sum = 0
+                for result in self.results:
+                    comp_sum += result[1]
+                    swap_sum += result[2]
+                print("평균 comparison 횟수 : %d" % (comp_sum/len(self.shuffle)))
+                print("평균 swap 횟수 : %d" % (swap_sum/len(self.shuffle)))
     
     # 정렬할 배열 만드는 메소드
     def make_array(self, repeat):
@@ -91,6 +110,7 @@ class simulator():
         
         if self.sortType == Sort_type.BUBBLE:
             result = self.bubble_sort()
+            self.results.append(result)
             print("완료\n")
             print("걸린 시간 : %s초" % str(result[0])[:self.time_show_limit])
             if self.show_detail:
@@ -98,6 +118,7 @@ class simulator():
                 print("swap 횟수 : %d" % result[2])
         if self.sortType == Sort_type.SELECTION:
             result = self.selection_sort()
+            self.results.append(result)
             print("완료\n")
             print("걸린 시간 : %s초" % str(result[0])[:self.time_show_limit])
             if self.show_detail:
