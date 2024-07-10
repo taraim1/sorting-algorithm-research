@@ -23,7 +23,7 @@ def help(command):
         print("사용 가능한 명령어 모음입니다\n")
         print("/title : 타이틀 화면을 출력합니다")
         print("/start : 시뮬레이션을 시작합니다")
-        print("/change_alg : 사용할 정렬 알고리즘을 설정합니다")
+        print("/alg : 사용할 정렬 알고리즘을 설정합니다")
         print("/array : 정렬할 배열의 크기를 설정합니다")
         print("/shuffle : 배열을 몇 번 섞을지 설정합니다")
         print("/detail : 시뮬레이션 도중 세부 정보 표기 유무를 설정합니다\n")
@@ -35,7 +35,7 @@ def help(command):
         print("/title : 타이틀 화면을 출력합니다\n현재 선택된 알고리즘, 배열 크기 등의 정보가 표기됩니다\n사용법 : /title")
     elif command[1] == "/start":
         print("/start : 정렬 시뮬레이션을 시작합니다\n선택된 옵션에서의 정렬 소모 시간을 출력합니다\n사용법 : /start")
-    elif command[1] == "/change_alg":
+    elif command[1] == "/alg":
         print("/alg : 사용할 정렬 알고리즘을 설정합니다\n사용법 : /alg 숫자\n")
         print("/0 : 버블 정렬")
         print("/1 : 선택 정렬")

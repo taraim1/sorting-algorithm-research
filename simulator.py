@@ -4,6 +4,7 @@ import random
 import time
 import copy
 import math
+import heap
 
 class Sort_type(Enum):
     BUBBLE = 0
@@ -56,6 +57,14 @@ class simulator():
                     swap_sum += result[2]
                 print("평균 comparison 횟수 : %d" % (comp_sum/len(self.shuffle)))
                 print("평균 swap 횟수 : %d" % (swap_sum/len(self.shuffle)))
+            elif self.sortType == Sort_type.HEAP:
+                make_sum = 0
+                sort_sum = 0
+                for result in self.results:
+                    make_sum += result[1]
+                    sort_sum += result[2]
+                print("힙 제작에 걸린 평균 시간 : %s초" % str(make_sum/len(self.shuffle))[:self.time_show_limit])
+                print("힙 정렬에 걸린 평균 시간 : %s초" % str(sort_sum/len(self.shuffle))[:self.time_show_limit])
     
     # 정렬할 배열 만드는 메소드
     def make_array(self, repeat):
@@ -123,6 +132,11 @@ class simulator():
             result = self.merge_sort_handler(self.array)
             self.results.append(result)
             self.show_result(result)
+        if self.sortType == Sort_type.HEAP:
+            result = self.heap_sort()
+            self.results.append(result)
+            self.show_result(result)
+
             
     # 결과 출력
     def show_result(self, result):
@@ -137,6 +151,9 @@ class simulator():
             elif self.sortType == Sort_type.MERGE:
                 print("divide / merge 횟수 : %d" % result[1])
                 print("트리 깊이 : %d" % result[2])
+            elif self.sortType == Sort_type.HEAP:
+                print("힙 제작에 걸린 시간 : %s초" % str(result[1])[:self.time_show_limit])
+                print("힙 정렬에 걸린 시간 : %s초" % str(result[2])[:self.time_show_limit])
     
     
     # 버블 정렬 (걸린 시간, comparison 횟수, swap 횟수) 리턴해줌
@@ -240,4 +257,15 @@ class simulator():
             result_i += 1
         
         return result
+    
+    # 힙 정렬
+    def heap_sort(self):
+        Heap = heap.Heap() # heap.py에 코드 있음
+        start = time.time()
         
+        Heap.build_max_heap(self.array)
+        heap_make_time = time.time() - start
+        Heap.heap_sort()
+        heap_sort_time = time.time() - start - heap_make_time
+        
+        return(time.time() - start, heap_make_time, heap_sort_time)
