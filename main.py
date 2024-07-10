@@ -36,7 +36,7 @@ def help(command):
     elif command[1] == "/start":
         print("/start : 정렬 시뮬레이션을 시작합니다\n선택된 옵션에서의 정렬 소모 시간을 출력합니다\n사용법 : /start")
     elif command[1] == "/change_alg":
-        print("/change_alg : 사용할 정렬 알고리즘을 설정합니다\n사용법 : /change_alg 숫자\n")
+        print("/alg : 사용할 정렬 알고리즘을 설정합니다\n사용법 : /alg 숫자\n")
         print("/0 : 버블 정렬")
         print("/1 : 선택 정렬")
         print("/2 : 병합 정렬")
@@ -103,8 +103,8 @@ def start():
             print("시뮬레이션이 취소되었습니다")
             return
   
-# /change_alg 명령어
-def change_alg(type):
+# /alg 명령어
+def alg(type):
     global current_sort_type
     
     
@@ -200,11 +200,11 @@ def main():
             title()
         elif command[0] == "/start":
             start()
-        elif command[0] == "/change_alg":
+        elif command[0] == "/alg":
             if len(command) == 1:
                 print("오류 : 인자 개수가 부족합니다")
             else:
-                change_alg(command[1])
+                alg(command[1])
         elif command[0] == "/array":
             if len(command) == 1:
                 print("오류 : 인자 개수가 부족합니다")
@@ -220,6 +220,8 @@ def main():
                 print("오류 : 인자 개수가 부족합니다")
             else:
                 detail(command[1])
+        elif command[0] == "/이스터에그":
+            print("여기 사람이 갈려나가고 있어요")
         else:
             print("오류 : 정의되지 않은 명령어입니다")
 

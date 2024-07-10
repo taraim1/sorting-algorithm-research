@@ -3,6 +3,7 @@ from enum import Enum
 import random
 import time
 import copy
+import math
 
 class Sort_type(Enum):
     BUBBLE = 0
@@ -61,7 +62,8 @@ class simulator():
         self.array = [i for i in range(self.array_size)]
         
         # 섞기
-        print("배열을 섞는 중... ", end="")
+        if self.show_detail:
+            print("배열을 섞는 중... ")
         
         
         for _ in range(repeat):
@@ -101,29 +103,40 @@ class simulator():
             self.array = copy.deepcopy(result_list)
             
             
-        
-        print("완료")
+        if self.show_detail:
+            print("배열 섞기 완료")
     
     # 정렬하는 메소드
     def start_sort(self):
-        print("배열 정렬 중... ", end="")
+        if self.show_detail:
+            print("배열 정렬 중... ")
         
         if self.sortType == Sort_type.BUBBLE:
             result = self.bubble_sort()
             self.results.append(result)
-            print("완료\n")
-            print("걸린 시간 : %s초" % str(result[0])[:self.time_show_limit])
-            if self.show_detail:
-                print("compariaon 횟수 : %d" % result[1])
-                print("swap 횟수 : %d" % result[2])
+            self.show_result(result)
         if self.sortType == Sort_type.SELECTION:
             result = self.selection_sort()
             self.results.append(result)
-            print("완료\n")
-            print("걸린 시간 : %s초" % str(result[0])[:self.time_show_limit])
-            if self.show_detail:
+            self.show_result(result)
+        if self.sortType == Sort_type.MERGE:
+            result = self.merge_sort_handler(self.array)
+            self.results.append(result)
+            self.show_result(result)
+            
+    # 결과 출력
+    def show_result(self, result):
+        if self.show_detail:
+            print("배열 정렬 완료\n")
+        print("걸린 시간 : %s초" % str(result[0])[:self.time_show_limit])
+        
+        if self.show_detail:
+            if self.sortType == Sort_type.BUBBLE or self.sortType == Sort_type.SELECTION:
                 print("compariaon 횟수 : %d" % result[1])
                 print("swap 횟수 : %d" % result[2])
+            elif self.sortType == Sort_type.MERGE:
+                print("divide / merge 횟수 : %d" % result[1])
+                print("트리 깊이 : %d" % result[2])
     
     
     # 버블 정렬 (걸린 시간, comparison 횟수, swap 횟수) 리턴해줌
@@ -155,7 +168,7 @@ class simulator():
         start = time.time()
         
         complete = True
-        global min_index
+        min_index = 0
         
         for i in range(self.array_size-1):
             complete = True
@@ -178,3 +191,53 @@ class simulator():
                 swap += 1
         
         return (time.time() - start, comp, swap)
+    
+    # 병합 정렬
+    def merge_sort_handler(self, arr : list):
+        start = time.time()
+        self.divide_count = 0 
+        
+        self.merge_sort(arr)
+        return (time.time() - start, self.divide_count, math.ceil(math.log2(self.array_size)))
+    
+    def merge_sort(self, arr : list):
+        
+        if len(arr) <= 1:
+            return arr
+        
+        self.divide_count += 1
+        
+        mid = len(arr)//2
+        left = arr[:mid]
+        right = arr[mid:]
+        
+        left = self.merge_sort(left)
+        right = self.merge_sort(right)
+        
+        return self.merge(left, right)
+    
+    def merge(self, left : list, right : list):
+        result = [0]*(len(left) + len(right))
+        result_i = 0
+        
+        left_i = 0
+        right_i = 0
+        
+        for _ in range(len(left) + len(right)):
+            if left_i == len(left):
+                result[result_i] = right[right_i]
+                right_i += 1
+            elif right_i == len(right):
+                result[result_i] = left[left_i]
+                left_i += 1
+            elif left[left_i] <= right[right_i]:
+                result[result_i] = left[left_i]
+                left_i += 1
+            else:
+                result[result_i] = right[right_i]
+                right_i += 1
+            
+            result_i += 1
+        
+        return result
+        
